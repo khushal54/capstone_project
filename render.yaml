@@ -2,7 +2,7 @@ services:
   # 1. Backend Web Service
   - type: web
     name: blog-app-backend
-    env: node
+    runtime: node
     plan: free
     rootDir: Backend
     buildCommand: npm install
@@ -10,6 +10,8 @@ services:
     envVars:
       - key: PORT
         value: 5000
+      - key: NODE_ENV
+        value: production
       - key: DB_URL
         sync: false
         description: "Your MongoDB Connection URI (e.g., mongodb+srv://...)"
@@ -34,7 +36,7 @@ services:
   # 2. Frontend Static Site
   - type: static
     name: blog-app-frontend
-    env: static
+    runtime: static
     plan: free
     rootDir: Frontend
     buildCommand: npm install && npm run build

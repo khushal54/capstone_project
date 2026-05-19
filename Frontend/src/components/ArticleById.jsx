@@ -1,6 +1,6 @@
 import { useParams, useLocation, useNavigate } from "react-router";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../api/axiosInstance";
 import { useAuth } from "../store/authStore";
 import {
   articlePageWrapper,
@@ -50,7 +50,7 @@ function ArticleByID() {
       setLoading(true);
 
       try {
-        const res = await axios.get(`http://localhost:5000/user-api/article/${id}`, { withCredentials: true });
+        const res = await api.get(`/user-api/article/${id}`);
 
         setArticle(res.data.payload);
       } catch (err) {
@@ -79,10 +79,9 @@ function ArticleByID() {
     if (!window.confirm(confirmMsg)) return;
 
     try {
-      const res = await axios.patch(
-        "http://localhost:5000/author-api/articles",
+      const res = await api.patch(
+        "/author-api/articles",
         { articleId: article._id, isArticleActive: newStatus },
-        { withCredentials: true },
       );
 
       console.log("SUCCESS:", res.data);
@@ -115,7 +114,7 @@ function ArticleByID() {
     commentObj.articleId = article._id;
     commentObj.user=user
     console.log(commentObj);
-    let res = await axios.put("http://localhost:5000/user-api/articles", commentObj, { withCredentials: true });
+    let res = await api.put("/user-api/articles", commentObj);
     if (res.status === 200) {
       
       setArticle(res.data.payload);
