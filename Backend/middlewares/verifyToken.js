@@ -15,7 +15,7 @@ export const verifyToken = (...allowedRoles) => {
       }
       
       //Validate token(decode the token)
-      let decodedToken = verify(token, process.env.SECRET_KEY);
+      let decodedToken = verify(token, process.env.SECRET_KEY || "default_secret_key_12345");
 
       //Check the role is same as role in decodedToken
       if (!allowedRoles.includes(decodedToken.role)) {

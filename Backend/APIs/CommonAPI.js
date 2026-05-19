@@ -68,7 +68,7 @@ commonApp.post("/login", async (req, res, next) => {
     return res.status(400).json({ message: "Invalid password" });
   }
   //create jwt
-  const signedToken = sign({id:user._id, email: email, role: user.role, firstName:user.firstName, lastName:user.lastName, profileImageUrl:user.profileImageUrl }, process.env.SECRET_KEY, { expiresIn: "1h" });
+  const signedToken = sign({id:user._id, email: email, role: user.role, firstName:user.firstName, lastName:user.lastName, profileImageUrl:user.profileImageUrl }, process.env.SECRET_KEY || "default_secret_key_12345", { expiresIn: "1h" });
 
   //set token to res header as httpOnly cookie
   const isProduction = process.env.NODE_ENV === "production";
