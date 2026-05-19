@@ -4,16 +4,14 @@ import { hash, compare } from "bcryptjs";
 import { config } from "dotenv";
 import jwt from "jsonwebtoken";
 import {verifyToken} from '../middlewares/verifyToken.js'
-import {v2 as cloudinary} from "cloudinary"
+import fs from "fs";
 import { upload } from "../config/multer.js";
-import { uploadToCloudinary } from "../config/cloudinaryUpload.js";
 const { sign } = jwt;
 export const commonApp = exp.Router();
 config();
 
 //Route for register
 commonApp.post("/users", upload.single("profileImageUrl"), async (req, res, next) => {
-  let cloudinaryResult;
   try {
     let allowedRoles = ["USER", "AUTHOR"];
     //get user from req
@@ -26,15 +24,10 @@ commonApp.post("/users", upload.single("profileImageUrl"), async (req, res, next
       return res.status(400).json({ message: "Invalid role" });
     }
 
-    //Upload image to cloudinary from memoryStorage
+    // Add local path of image to newUserObj
     if (req.file) {
-      cloudinaryResult = await uploadToCloudinary(req.file.buffer);
+      newUser.profileImageUrl = `/uploads/${req.file.filename}`;
     }
-
-    // console.log("cloudinaryResult", cloudinaryResult);
-
-    //add CDN link(secure_url) of image to newUserObj
-    newUser.profileImageUrl = cloudinaryResult?.secure_url;
     //run validators manually
     //hash password and replace plain with hashed one
     newUser.password = await hash(newUser.password, 12);
@@ -49,9 +42,9 @@ commonApp.post("/users", upload.single("profileImageUrl"), async (req, res, next
     res.status(201).json({ message: "User created" });
   } catch (err) {
     console.log("err is ", err);
-    //delete image from cloudinary
-    if (cloudinaryResult?.public_id) {
-      await cloudinary.uploader.destroy(cloudinaryResult.public_id);
+    // Delete local file if it was uploaded but DB save failed
+    if (req.file) {
+      fs.unlink(req.file.path, () => {});
     }
     next(err);
   }

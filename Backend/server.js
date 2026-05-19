@@ -50,9 +50,10 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 app.use(exp.static(path.join(__dirname, '../Frontend/dist')));
+app.use('/uploads', exp.static(path.join(__dirname, 'uploads')));
 
 // Fallback for non-API routes (React Router SPA routing)
-app.get(/^\/(?!user-api|author-api|admin-api|auth).*/, (req, res) => {
+app.get(/^\/(?!user-api|author-api|admin-api|auth|uploads).*/, (req, res) => {
   res.sendFile(path.join(__dirname, '../Frontend/dist/index.html'));
 });
 

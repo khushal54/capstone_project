@@ -17,12 +17,3 @@ services:
       - key: SECRET_KEY
         generateValue: true
         description: "JWT Secret Key (auto-generated if left empty)"
-      - key: CLOUDINARY_CLOUD_NAME
-        sync: false
-        description: "Cloudinary Cloud Name"
-      - key: CLOUDINARY_API_KEY
-        sync: false
-        description: "Cloudinary API Key"
-      - key: CLOUDINARY_API_SECRET
-        sync: false
-        description: "Cloudinary API Secret"
