@@ -43,6 +43,19 @@ const connectDB=async ()=>{
 
 connectDB()
 
+// Serve static files from React build
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+app.use(exp.static(path.join(__dirname, '../Frontend/dist')));
+
+// Fallback for non-API routes (React Router SPA routing)
+app.get(/^\/(?!user-api|author-api|admin-api|auth).*/, (req, res) => {
+  res.sendFile(path.join(__dirname, '../Frontend/dist/index.html'));
+});
+
 //To handle invalid path
 app.use((req,res,next)=>{
     res.status(404).json({message:`Path ${req.url} is invalid`})

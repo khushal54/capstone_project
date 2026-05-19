@@ -1,0 +1,14 @@
+{
+  "name": "blog-app-unified",
+  "version": "1.0.0",
+  "description": "Unified blog app serving frontend and backend together",
+  "main": "Backend/server.js",
+  "type": "module",
+  "scripts": {
+    "install-backend": "npm install --prefix Backend",
+    "install-frontend": "npm install --prefix Frontend",
+    "build-frontend": "npm run build --prefix Frontend",
+    "build": "npm run install-backend && npm run install-frontend && npm run build-frontend",
+    "start": "node Backend/server.js"
+  }
+}
